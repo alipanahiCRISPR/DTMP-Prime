@@ -14,7 +14,7 @@ The combination of these features with the new encoding strategy has significant
  In this package, we provide resources including source codes of the DTMP-Prime model, data process, train and evaluate different deep models, and visualization tools. This package is still under development, as more features will be included gradually.
 
 ## 1. Environment setup
-We recommend you to build a python virtual environment with Anaconda. then download DNABERT (k_mere=6) or a light version of it named Destili-DNABER. See embedding section in our repo.
+We recommend you build a Python virtual environment with Anaconda. then download DNABERT (k_mere=6) or a light version of it named Destili-DNABER. See the embedding section in our repo.
 
 ## 2. Data processing
-we fine-tune DNABERT with our one data, if you want to use DTMP-prim, please process your data into the same format as DNABERT. Note that the sequences are in kmer format, so you will need to convert your sequences into that. Then use the encoding function. 
+we fine-tune DNABERT with our data, if you want to use DTMP-prim, please process your data into the same format as DNABERT. Note that the sequences are in kmer format, so you will need to convert your sequences into that. Then use the our encoding function. 
