@@ -19,6 +19,31 @@ We recommend you build a Python virtual environment with Anaconda. then download
 ## 2. Data processing
 we fine-tune DNABERT with our data, if you want to use DTMP-Prim, please process your data into the same format as DNABERT. Note that the sequences are in kmer format, so you will need to convert your sequences into that. Then use our encoding function. 
 
+### 2.1 Input
+
+Default values are:
+
+genome_fasta: /path/to/genome.fa
+scaffold: GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC
+debug: 0
+n_jobs: 4
+min_PBS_length: 8
+max_PBS_length: 17
+min_RTT_length: 10
+max_RTT_length: 25
+min_distance_RTT5: 3
+max_ngRNA_distance: 100
+max_target_to_sgRNA: 10
+sgRNA_length: 20
+offset: -3
+PAM: NGG
+
+### 2.2 Output
+
+The top candidates are provided in topX_pegRNAs.csv. This is a rawX format file. The output folder contains:
+
+    topX_pegRNAs.csv
+    
 ## 3. Prediction
 After the model is fine-tuned, you can get predictions by running ... 
 
