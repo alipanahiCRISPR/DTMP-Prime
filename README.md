@@ -23,7 +23,7 @@ we fine-tune DNABERT with our data, if you want to use DTMP-Prim, please process
 
 Default values are:
 
-genome_fasta: /path/to/genome.fa
+   genome_fasta: /path/to/genome.fa
 scaffold: GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC
 debug: 0
 n_jobs: 4
