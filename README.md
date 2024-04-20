@@ -20,10 +20,9 @@ We recommend you build a Python virtual environment with Anaconda. then download
 we fine-tune DNABERT with our data, if you want to use DTMP-Prim, please process your data into the same format as DNABERT. Note that the sequences are in kmer format, so you will need to convert your sequences into that. Then use our encoding function. 
 
 ### 2.1 Input
-
+```
 Default values are:
-
-   genome_fasta: /path/to/genome.fa
+genome_fasta: /path/to/genome.fa
 scaffold: GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC
 debug: 0
 n_jobs: 4
@@ -37,6 +36,7 @@ max_target_to_sgRNA: 10
 sgRNA_length: 20
 offset: -3
 PAM: NGG
+```
 
 ### 2.2 Output
 
