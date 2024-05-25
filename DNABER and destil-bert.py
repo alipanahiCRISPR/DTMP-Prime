@@ -13,6 +13,7 @@ pip install boto3
 pip install sentencepiece
 pip install sacremoses
 pip install neptune
+pip install decouple
 
 #!git clone https://github.com/jerryji1993/DNABERT
 %cd DNABERT
@@ -72,7 +73,6 @@ git clone https://github.com/joanaapa/Distillation-DNABERT-Promoter
 
 %cd /content/Distillation-DNABERT-Promoter
 
-import torch
 from transformers import DistilBertForSequenceClassification
 
 mymodel = DistilBertForSequenceClassification.from_pretrained('Peltarion/dnabert-distilbert')
@@ -93,8 +93,6 @@ python run_distil.py \
     --logging_steps 500 \
     --save_steps 8000 \
     --num_train_epochs 2
-
-pip install decouple
 
 
 
