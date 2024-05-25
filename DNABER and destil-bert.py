@@ -1,14 +1,18 @@
 pip install virtualenv
-
-
 pip install torch
-
-
-
+pip install biopy
+pip install transformers
+pip install scikit-learn
+pip install tensorboardX
+pip install transformers
+pip install tokenization_utils
 pip install pytorch
-
-pip install apex
-
+pip install apex 
+pip install pyfaidx
+pip install boto3
+pip install sentencepiece
+pip install sacremoses
+pip install neptune
 
 #!git clone https://github.com/jerryji1993/DNABERT
 %cd DNABERT
@@ -27,23 +31,6 @@ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cud
 git clone https://github.com/jerryji1993/DNABERT
 
 %cd /content/DNABERT/examples
-
-
-
-pip install biopy
-
-pip install transformers
-
-pip install scikit-learn
-
-pip install tensorboardX
-
-pip install transformers
-
-
-
-pip install tokenization_utils
-
 
 export KMER=6
 export MODEL_PATH=./ft/$KMER
@@ -84,12 +71,6 @@ output = model(model_input)
 git clone https://github.com/joanaapa/Distillation-DNABERT-Promoter
 
 %cd /content/Distillation-DNABERT-Promoter
-
-pip install pyfaidx
-pip install boto3
-pip install sentencepiece
-pip install sacremoses
-pip install neptune
 
 import torch
 from transformers import DistilBertForSequenceClassification
