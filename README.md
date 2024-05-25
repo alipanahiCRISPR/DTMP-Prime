@@ -46,7 +46,7 @@ The top candidates are provided in topX_pegRNAs.csv. This is a rawX format file.
     topX_pegRNAs.csv
     
 ## 3. Prediction
-After the model is fine-tuned, you can get predictions by running ... 
+After the model is fine-tuned, you can get predictions by running PE score. 
 
 ## 4. Visualization
 Visualization of DTMP-Prim consists of 3 steps. Calculate PE-efficiency score, attention scores, and Plot.
