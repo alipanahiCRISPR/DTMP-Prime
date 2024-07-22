@@ -1,5 +1,6 @@
 # Target mutation
-#تعدادی از ویژگی های تاثیر گذار در دقت خروجی ویرایش مد نظر اینجا تعریف می شوند و تعدادی هم که در سلول بالا و کلاس sgRNA تعریف شده اند
+# A number of influential features on the accuracy of the editing output are defined here, and some are defined in the above cell and the sgRNA class
+
 # (nick_to_pegRNA', 'target_to_pegRNA', 'target_to_RTT5','aln_ref_alt_mis', 'aln_ref_alt_del', 'aln_ref_alt_ins',  'PBS_GC', 'RTS_GC','PBS_length', 'RTS_length', 0, 1, 2, 3, 4, 5, 6, 7,
 # (nick_to_pegRNA,target_to_pegRNA,'is_dPAM' ,'aln_ref_alt_mis', 'aln_ref_alt_del', 'aln_ref_alt_ins')define here
 
@@ -233,12 +234,12 @@ class target_mutation:
 
 
 
-#بعد پیدا کردن همه  رشته ها حالا باید اسکور آنها را پیش بینی کنیم.
-	def predict(self,debug=0,PE2_model=None,PE3_model=None,**kwargs):
+# After finding all the sequences, we now need to predict their scores
+def predict(self,debug=0,PE2_model=None,PE3_model=None,**kwargs):
 		if not self.found_PE2:
 			return 0
 
-		#مدل های ذخیره شده را اینجا باز می کند
+		# Loads the saved models here
 		with open(PE2_model, 'rb') as file:
 			xgb_model_PE2 = pickle.load(file)
 		with open(PE3_model, 'rb') as file:
@@ -251,25 +252,24 @@ class target_mutation:
 		X_PE2 = self.X[self.X.nick_to_pegRNA.isnull()]
 		X_PE3 = self.X[~self.X.nick_to_pegRNA.isnull()]
 
-#تابع پیش بینی را اینجا فراخوانی می کنیم
+		# We call the prediction function here
 		pred_y_PE2 = xgb_model_PE2.predict(X_PE2[self.PE2_model_feature_names])
 		pred_y_PE3 = xgb_model_PE3.predict(X_PE3)
 
 		myPred = pd.DataFrame()
-	#نتایج هر 3 مدل با هم ترکیب می شود.
-	#pred_y_PE2.tolist() OR pred_y_PE3.tolist()
+		# The results of all 3 models are combined
+		#pred_y_PE2.tolist() OR pred_y_PE3.tolist()
 		myPred['predicted_efficiency'] = pred_y_PE2.tolist()+pred_y_PE3.tolist()#+DNABERTmodel.tolist()+myoldmodel()
 		myPred.index = X_PE2.index.tolist()+X_PE3.index.tolist()
 		self.X_p = pd.concat([self.X,myPred],axis=1)
 		self.rawX['predicted_efficiency'] = myPred.loc[self.rawX.index]['predicted_efficiency']
 
 
-#این دو مقدار نهایی حاصل از کد من هست که باید پرینت شود.
+		# These two final values are the results of my code that need to be printed
 		self.X_p = self.X_p.sort_values("predicted_efficiency",ascending=False)
 		self.rawX = self.rawX.sort_values("predicted_efficiency",ascending=False)
 
 
-		# میتوانی این قسمت ها را حذف کنی
 		# recommend dPAM when ever possible
 		tmp = self.rawX.copy()
 		if self.found_dPAM:

@@ -1,5 +1,5 @@
 # Encoding
-#اینکدینگ مرحله 2----برای این 2 مرحله کردم که بتوانم تاثیر روش اینکدینگ خودم رو بسنجم
+# Encoding step 2 - this is to understand the effect of my encoding method!
 import numpy as np
 
 class Encoder:
@@ -60,6 +60,6 @@ class Encoder:
 
 
 
-چک اینکدینگ
+# checking the encoding
 e = Encoder(seq_wt="AGCTGATTTTA", seq_et="CG_GTTTTTTG")
 print(e.on_off_code)
