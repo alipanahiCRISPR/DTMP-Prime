@@ -4,7 +4,13 @@ Welcome to the DTMP-Prime repository! This repository contains the implementatio
 
 DTMP-Prime leverages the power of BERT, a Bi-directional Transformer-based model with multi-head attention layers. If you use our models or codes, please cite our paper. As the repository is still under active development, we appreciate any reports of issues you encounter.
 
-## Key Features ✨
+### Architecture 🧱
+
+![architecture](/Figures/graphical%20abstract%202-2.jpg)
+
+### Steps 🪜
+
+![Steps to achieve the accuracy](/Figures/2-2.jpg)
 
 ### Novel Encoding Algorithm 🚀
 
