@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Form</title>
+    <style>
+      table {
+        margin: 0 auto; /* Center the table */
+        width: 50%; /* Set the desired width */
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body style="text-align: center">
+    <h1 style="text-align: center">DTMP-Prime</h1>
+    <h3 style="text-align: center">
+      DTMP-Prime: A Deep Transformer-based Model for Predicting Prime Editing
+      Efficiency and PegRNA Activity
+    </h3>
+    <div style="text-align: center">
+      <img
+        style="width: 50%"
+        src="../Figures/graphical abstract 2-2.jpg"
+        alt="graphical abstact"
+      />
+    </div>
+
+    <form id="dataForm">
+      <label for="RefSeq">Ref Seq:</label><br />
+      <input
+        style="width: 30rem"
+        type="text"
+        id="RefSeq"
+        name="RefSeq"
+        required
+      /><br /><br />
+
+      <label for="EditedSeq">Edited Seq:</label><br />
+      <input
+        style="width: 30rem"
+        type="text"
+        id="EditedSeq"
+        name="EditedSeq"
+        required
+      /><br /><br />
+
+      <label for="PEsystem">PE system:</label>
+      <select id="PEsystem" name="PEsystem">
+        <option value="2">PE 2</option>
+        <option value="3">PE 3</option>
+      </select>
+
+      <label for="EditType">Edit Type:</label>
+      <select id="EditType" name="EditType">
+        <option value="1">insertion</option>
+        <option value="2">deletion</option>
+        <option value="3">substitutions</option>
+      </select>
+
+      <label for="EditLength">Edit Length:</label>
+      <select id="EditLength" name="EditLength">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <br /><br />
+
+      <label for="MaximumRTTLength">Maximum RTT Length:</label>
+      <input
+        type="text"
+        id="MaximumRTTLength"
+        name="MaximumRTTLength"
+        required
+      />
+
+      <label for="MaximumPBSLength">Maximum PBS Length:</label>
+      <input
+        type="text"
+        id="MaximumPBSLength"
+        name="MaximumPBSLength"
+        required
+      />
+
+      <br /><br />
+
+      <!-- <label for="textarea">Textarea:</label><br />
+      <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea
+      ><br /><br /> -->
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <h2 style="display: none">Result</h2>
+    <table style="display: none">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Dropdown Option</th>
+          <th>Textarea Content</th>
+        </tr>
+      </thead>
+      <tbody id="dataTable">
+        <!-- Data will be inserted here -->
+      </tbody>
+    </table>
+
+    <script>
+      document
+        .getElementById("dataForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent form submission
+
+          // Get form values
+          const RefSeq = document.getElementById("RefSeq").value;
+          const dropdown = document.getElementById("dropdown").value;
+          const textarea = document.getElementById("textarea").value;
+
+          // Create a new table row with the data
+          const table = document.getElementById("dataTable");
+          const row = table.insertRow();
+          row.insertCell(0).innerText = name;
+          row.insertCell(1).innerText = dropdown;
+          row.insertCell(2).innerText = textarea;
+
+          // Clear the form
+          document.getElementById("dataForm").reset();
+        });
+    </script>
+  </body>
+  <div id="footer">
+    <p>© Laboratory of Dr.Safari (University of Zanjan)</p>
+  </div>
+</html>
