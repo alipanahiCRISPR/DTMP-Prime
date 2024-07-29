@@ -16,15 +16,14 @@ from glob import glob
 from Bio.SeqUtils import MeltingTemp as mt
 from Bio.SeqUtils import gc_fraction as gc
 from Bio.Seq import Seq
-from RNA import fold_compound  #compute minimum free energy (mfe)
+from RNA import fold_compound  # for compute minimum free energy (mfe)
 
 
 np.set_printoptions(threshold=sys.maxsize)
 tf.disable_v2_behavior()
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-#تعریف مدل در کریسپر
-
+# Define the model in CRISPR
 class Deep_xCas9(object):
     def __init__(self, filter_size, filter_num, node_1=80, node_2=60, l_rate=0.005):
         length = 30
@@ -33,8 +32,7 @@ class Deep_xCas9(object):
         self.is_training = tf.placeholder(tf.bool)
 
 
-#این لایه ها با توجه به مدل انتخاب شده برای اسکور دهی تعریف می شوند."
-
+        # These layers are defined based on the selected model for scoring
         def create_new_conv_layer(input_data, num_input_channels, num_filters, filter_shape, pool_shape, name):
             # setup the filter input shape for tf.nn.conv_2d
             conv_filt_shape = [filter_shape[0], filter_shape[1], num_input_channels,
@@ -105,16 +103,16 @@ class Deep_xCas9(object):
     # def end: def __init__
 # class end: Deep_xCas9
 
-#این تابع با توجه به مدل از پیش آموزش دیده اسکور همه رشته های طراحی شده را حساب می کند."
+# This function calculates the scores for all the designed sequences based on the pretrained model
 def Model_Finaltest(sess, TEST_X, model):
     test_batch = 500
     TEST_Z = np.zeros((TEST_X.shape[0], 1), dtype=float)
 
-# به ازای هر 500 تا از مدل تعریف شده در بالا درخواست خروجی می کنیم.
+# For every 500 of the model defined above, we request an output
     for i in range(int(np.ceil(float(TEST_X.shape[0]) / float(test_batch)))):
         Dict = {model.inputs: TEST_X[i * test_batch:(i + 1) * test_batch], model.is_training: False}
         TEST_Z[i * test_batch:(i + 1) * test_batch] = sess.run([model.outputs], feed_dict=Dict)[0]
-#  این برای حالتی است که طول دنباله بیش از 500 است ولی طول دنباله من 63 است و این جمع در واقع جمع اسکور عوامل تاثیرگذار است.
+#  This is for the case where the sequence length is over 500, but my sequence length is 63, and this sum is actually the sum of the scores of influencing factors
     list_score = sum(TEST_Z.tolist(), [])
 
     return list_score
@@ -123,7 +121,7 @@ def Model_Finaltest(sess, TEST_X, model):
 # def end: Model_Finaltest
 
 
-#این تابع برای  اینکدینگ مرحله 1 است"
+# This function is for encoding phase 1
 def preprocess_seq(data, seq_length):
 
     seq_onehot = np.zeros((len(data), 1, seq_length, 4), dtype=float)
@@ -147,7 +145,7 @@ def preprocess_seq(data, seq_length):
 
     return seq_onehot
 
-#  برای فراخوانی تابعی که در بالال برای اینکدینگ تعریف کردم
+# For calling the function that I defined above for encoding
 def preprocess_seq2(seq_wt, seq_et):
 
     e = Encoder(seq_wt, seq_et)
@@ -156,7 +154,7 @@ def preprocess_seq2(seq_wt, seq_et):
     #return self.on_off_code
 
 
-#"اسکور دهی بر اساس کریسپر و مدل انتخابی"
+# Scoring based on CRISPR and the selected model
 def spcas9_score(list_target30:list , gpu_env=0):
     '''
     input:: list_target  with length 30 n
@@ -166,8 +164,8 @@ def spcas9_score(list_target30:list , gpu_env=0):
 
 
 '''
-  #  best_model را تغییر دادم در ادامه شاید "
-  #در حال حاضر از مدل سایر محققین استفاده می کنم"
+  # I changed the best_model, might do so later.
+  # Currently, I am using a model from other researchers
 
   # TensorFlow config
     conf = tf.ConfigProto()
@@ -186,7 +184,7 @@ def spcas9_score(list_target30:list , gpu_env=0):
     best_model = 'PreTrain-Final-3-5-7-100-70-40-0.001-550-80-60'
 
     model_save = '%s/%s' % (best_model_path, best_model)
-# شبکه کانولوشنی که در بالا تعریف کردم براساس این پارامترها ساخته می شود.
+    # The convolutional network that I defined above is built based on these parameters
     filter_size = [3, 5, 7]
     filter_num  = [100, 70, 40]
     args        = [filter_size, filter_num, 0.001, 550]
@@ -199,17 +197,17 @@ def spcas9_score(list_target30:list , gpu_env=0):
 
         saver = tf.train.Saver()
         saver.restore(sess, model_save)
-# تابع اسکور دهی در اینجا و بعد مشخص کردم مدل انتخابی فراخوانی می شود.
+        # I have specified here that the scoring function and then the selected model will be called
         list_score = Model_Finaltest(sess, x_test, model)
 
     return list_score
 
 
 
-#تعریف مدل در پرایم ادیتینگ
+# Define the model in prime editing
 
-#" 3اتابع زیر برای کارهای پرایم ادیتینگ است ولی نمی دانم دقیقا چه می کنند ولی بودنشان برای ساخت تمام رشته های راهنمایی ممکن  ضروری است."
-# پیش پردازش برای پرایم ادیتینگ
+# The function below is for prime editing tasks
+# Preprocessing for prime editing
 def reverse_complement(sSeq):
     dict_sBases = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A', 'N': 'N', 'U': 'U', 'n': '',
                    '.': '.', '*': '*', 'a': 't', 'c': 'g', 'g': 'c', 't': 'a'}
@@ -272,8 +270,7 @@ def check_PAM_window(dict_sWinSize, sStrand, nIndexStart, nIndexEnd, sAltType, n
 # def END: check_PAM_window
 
 
-
-#ویژگی های دخیل در دقت ویرایش پرایم ادیتینگ استخراج و  بر اساس آنها اسکور نهایی پرایم ادیتینگ حساب می شود."
+# Features involved in the accuracy of prime editing are extracted, and based on them, the final score of prime editing is calculated.
 class FeatureExtraction:
     def __init__(self):
         self.sGuideKey = ''
@@ -314,8 +311,8 @@ class FeatureExtraction:
 
 
 
-  #"   با توجه به ورودی که از کاربر می گیریم متغییر ها مقدار دهی می شود  من فعلا 3 متغییر را می گیرم "
-  #"بعد تعریف پوسته برنامه این قسمت تغییر خواهد کرد."
+    # Variables are assigned based on the input we receive from the user. Currently, I am taking 3 variables 
+    # After defining the program's shell, this part will change
     def get_input(self, wt_seq, ed_seq, edit_type, edit_len):
         self.sWTSeq = wt_seq.upper()
         self.sEditedSeq = ed_seq.upper()
@@ -331,12 +328,11 @@ class FeatureExtraction:
 
 
 
+    # After receiving parameters from the user, all possible guide sequences should be designed and then scored
+    # I have used codes from GitHub to create all possible sequences
 
-   #"بعد گرفتن پارامترها از کاربر تمام رشته های راهنمای ممکن باید طراحی و سپس اسکور دهی شوند."
-   #"برای ساخت تمام رشته های ممکن از کد های گیتاپ استفاده کرده ام."
-
-   #" RT_PBS اول تمام "
-   #"pegRNA بعد تمام "
+    # First all RT_PBS
+    # Then all pegRNA
 
     def get_sAltNotation(self, nAltIndex):
         if self.sAltType == 'sub':
@@ -434,7 +430,7 @@ class FeatureExtraction:
 
 
 
- #"pegRNA تمام "
+ # all pegRNA
 
     def determine_PBS_RT_seq(self, sStrand, nMinPBS, nMaxPBS, nMaxRT, nSetPBSLen, nSetRTLen, nAltIndex, nPAM_Nick,
                             nAltPosWin, sForTempSeq):
@@ -560,7 +556,7 @@ class FeatureExtraction:
 
     # def END: make_rt_pbs_combinations
 
-# استخراج ویژگی های مهم دنباله های ورودی برای ساختار دوم
+# Extracting important features of input sequences for the secondary structure
     def determine_seqs(self):
         for sPAMKey in self.dict_sSeqs:
 
@@ -638,13 +634,12 @@ class FeatureExtraction:
     # def END: determine_seqs
 
 
-#" تا اینجا تمام رشته های  PegRNA را تعریف کردم"
+# Up to this point, I have defined all the PegRNA sequences.
 
-
-#  "حال ساختار دوم رشته ها "
-#   "برای اسکور دهی کلا 3 نوع پارامتر در نظر گرفته می شود ویژگی های رشته های ورودی ، ساختار دوم و اینتراکشن ژن ها"
-#"تا اینجا داشتیم  پارامترهای تاثیر گذار  را از ساختار رشته های ورودی استخراج می کردیم
-#" در ادامه ویژگی های مربوط به ساختار دوم ژن بررسی می شود."
+# Now the secondary structure of the sequences.
+# For scoring, a total of 3 types of parameters are considered: features of the input sequences, the secondary structure, and gene interactions.
+# So far, we have been extracting influential parameters from the structure of the input sequences.
+# Next, features related to the secondary structure of the gene will be examined.
 
     def determine_secondary_structure(self):
         for sPAMKey in self.dict_sSeqs:
@@ -670,7 +665,7 @@ class FeatureExtraction:
 
 
 
-#"بررسی اینتراکشن ها "
+# Examining the interactions
     def determine_Tm(self, sPAMKey, sSeqKey):
         sForTm1 = self.dict_sCombos[sPAMKey][sSeqKey]['Tm1']
         sForTm2 = self.dict_sCombos[sPAMKey][sSeqKey]['Tm2']
@@ -767,11 +762,10 @@ class FeatureExtraction:
 
 
 
-#"این تابع برای مشخص  کردن ستون هایی است که در خروجی نمایش داده می شود."
-#" هر یک از این پارامترها را در بالا تعریف و حساب کرده ایم و حال نمایش می دهیم."
+# This function is for specifying the columns that are displayed in the output.
+# We have defined and calculated each of these parameters above and now display them.
 
-#"برای همه  رشته ها که اسکور آنها را حساب کردم این خروجی ها حساب می شود ولی من فقط 10 تا را نمایش می دهم."
-
+# For all the sequences whose scores I have calculated, these outputs are computed, but I only display 10 of them.
 
     def make_output_df(self):
 
@@ -833,17 +827,14 @@ class FeatureExtraction:
 
 # def END: make_output
 
-#"برای اسکور دهی کلا 3 نوع پارامتر در نظر گرفته می شود ویژگی های رشته های ورودی ، ساختار دوم و اینتراکشن ژن ها"
-#"تا اینجا داشتیم  پارامترهای تاثیر گذار  را از ساختار رشته های ورودی استخراج و ساختار دوم می کردیم
-#" در ادامه ویژگی های مربوط به اینتراکشن ژن ها بررسی می شود."
+# For scoring, a total of 3 types of parameters are considered: features of the input sequences, the secondary structure, and gene interactions.
+# Up to this point, we have been extracting influential parameters from the structure of the input sequences and making the secondary structure.
+# Next, features related to gene interactions will be examined.
 
 
 
 
-
-
-# ساخت یک شبکه CNN , GRU
-#جدید برای پرایم
+# Building a new CNN, GRU network for prime.
 
 class GeneInteractionModel(nn.Module):
 
@@ -909,9 +900,8 @@ class GeneInteractionModel(nn.Module):
 
 
 
-
-# شروع پایپ لاین اصلی
-#ورودی هایی که از کاربر گرفتیم را به وان هات تبدیل می کند
+# starting the main pipe
+# Converts the inputs we received from the user to one-hot encoding.
 def seq_concat(data, col1='WT74_On', col2='Edited74_On', seq_length=74):
 #   wt = preprocess_seq2(data[col1], seq_length)
 #   ed = preprocess_seq2(data[col2], seq_length)
@@ -924,9 +914,9 @@ def seq_concat(data, col1='WT74_On', col2='Edited74_On', seq_length=74):
     return g
 
  #       1-the Tm (melting temperature) of the DNA:RNA hybrid from positions 16 - 20 of the sgRNA, i.e. the 5nts immediately proximal of the NGG PAM
- #       2-the Tm of the DNA:RNA hybrid from position 8 - 15 (i.e. 8 nt)
- #       3-the Tm of the DNA:RNA hybrid from position 3 - 7  (i.e. 5 nt)
-#می خواهیم تک تک ویژگی ها را حساب و تعدادی از آنها را انتخاب و به عنوان ورودی به تابع مربوط به محاسبه اسکور می دهم.
+#       2-the Tm of the DNA:RNA hybrid from position 8 - 15 (i.e. 8 nt)
+#       3-the Tm of the DNA:RNA hybrid from position 3 - 7  (i.e. 5 nt)
+# We want to calculate each feature, select a number of them, and use them as input to the function related to scoring calculation
 def select_cols(data):
     features = data.loc[:, ['PBSlen', 'RTlen', 'RT-PBSlen', 'Edit_pos', 'Edit_len', 'RHA_len', 'type_sub',
                             'type_ins', 'type_del', 'Tm1', 'Tm2', 'Tm2new', 'Tm3', 'Tm4', 'TmD',
@@ -935,12 +925,12 @@ def select_cols(data):
     return features
 
 
-# برای محاسبه اسکور 3 ورودی می گیرد داده گرفته شده از کاربر، مدل پرایم و نوع سلول
+# For scoring calculation, it takes 3 inputs: data received from the user, prime model, and cell type
 def calculate_deepprime_score(df_input, pe_system='PE2max', cell_type='HEK293T'):
 
     os.environ['CUDA_VISIBLE_DEVICES']='0'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-#در ادامه کار با مدل برت من جایگزین می شود.
+# Moving forward, it will be replaced by my BERT model
     from genet_models import load_deepprime
 
     model_dir, model_type = load_deepprime(pe_system, cell_type)
@@ -948,26 +938,26 @@ def calculate_deepprime_score(df_input, pe_system='PE2max', cell_type='HEK293T')
     mean = pd.read_csv('%s/DeepPrime_base/mean.csv' % model_dir, header=None, index_col=0).squeeze()
     std  = pd.read_csv('%s/DeepPrime_base/std.csv' % model_dir, header=None, index_col=0).squeeze()
 
-# در این خط ورودی را از کاربر می گیریم و تمام ویژگی ها را که در ابتدا تعریف کردیم را محاسبه می کنیم و در نهایت می خواهیم به عنوان ورودی به تابع مربوط به محاسبه اسکور بدهیم
+    # In this line, we take the input from the user, calculate all the features that we initially defined, and ultimately want to provide it as input to the function related to scoring calculation.
     test_features = select_cols(df_input)
 
     g_test = seq_concat(df_input)
 
-    # این وردی تابع مربوط به محاسبه اسکور است. دقت شود به جای مقادیر اصلی اختلاف آنها با میانگین به مدل داده می شود
+    # This is the input for the scoring calculation function. Note that instead of the actual values, the differences from the average are given to the model
     x_test = (test_features - mean) / std
 
     g_test = torch.tensor(g_test, dtype=torch.float32, device=device)
     x_test = torch.tensor(x_test.to_numpy(), dtype=torch.float32, device=device)
 
 
-    #  لود کردن مدل ها با توجه به تابعی که برای این کار نوشتم می خواهم چند مدل داشته باشم و از هر کدام خروجی بگیرم و میانگین پاسخ را به خروجی بفرستم
+    # I want to load models based on the function I wrote for this purpose. I want to have several models, take outputs from each one, and send the average response to the output
     models = [m_files for m_files in glob('%s/%s/*.pt' % (model_dir, model_type))]
     preds  = []
 
     for m in models:
         model = GeneInteractionModel(hidden_size=128, num_layers=1).to(device)
         model.load_state_dict(torch.load(m))
-        #محاسبه خروجی مدل که همان اسکور نهایی من است
+        # Calculating the model output, which is my final score
         model.eval()
         with torch.no_grad():
             g, x = g_test, x_test
@@ -975,16 +965,16 @@ def calculate_deepprime_score(df_input, pe_system='PE2max', cell_type='HEK293T')
             pred = model(g, x).detach().cpu().numpy()
         preds.append(pred)
 
-    # میانگین پیش بینی ها
+    # The average of the predictions
     preds = np.squeeze(np.array(preds))
     preds = np.mean(preds, axis=0)
     preds = np.exp(preds) - 1
 
     return preds
 
-#فراخوانی تابعی که بر اساس مدل و ورودی ها پیش بینی ها را انجام می دهد
-#تنها 3 تا از این متغییر ها در حال حاضر از کاربر گرفته می شود و بقیه با مقادیر اولیه مقدار دهی می شود در ادامه بعد از تعریف پوسته سایت این متغییر ها را از کاربر خواهیم گرفت.
-# در پایان کد با فراخوانی این تابع اسکورها را محاسبه و چاپ می کنم.
+# Calling a function that makes predictions based on the model and inputs.
+# Currently, only 3 of these variables are taken from the user, and the rest are initialized with default values. In the future, after defining the site's shell, we will get these variables from the user.
+# At the end of the code, by calling this function, I will calculate and print the scores.
 def pe_score(Ref_seq: str,
             ED_seq: str,
             sAlt: str,
@@ -1013,11 +1003,11 @@ def pe_score(Ref_seq: str,
 
 
 #FeatureExtraction Class
-# بتدا تمام رشته راهنما های ممکن ساخته می شود
-# تابعی را فراخوانی می کنیم تا تمام ویژگی های مربوط به دنباله ها استخراج شود
-# سپس اطلاعات مربوط به ساختار دوم
-#در نهایت اطلاعات مربوط به اینتراکشن ژن ها
-#تابع مربوط به استخراج اطلاعات مربوط به اینتراکشن ژن ها را دارم ولی هنوز نمی دانم چه اطلاعاتی در اسکور دهی پرایم ادیتینگ تاثیر گذار هستند تا آن را به مدل اضافه کنم.
+# First, all possible guide sequences are created.
+# We call a function to extract all features related to the sequences.
+# Then, information related to the secondary structure.
+# Finally, information related to gene interactions.
+# I have the function for extracting information related to gene interactions, but I still don't know which information affects the scoring of prime editing to add it to the model.
 
     cFeat = FeatureExtraction()
     cFeat.input_id = sID
@@ -1026,22 +1016,21 @@ def pe_score(Ref_seq: str,
     cFeat.get_sAltNotation(nAltIndex)
     cFeat.get_all_RT_PBS(nAltIndex, nMinPBS=pbs_range[0]-1, nMaxPBS=pbs_range[1], nMaxRT=rtt_max, pe_system=pe_system)
     cFeat.make_rt_pbs_combinations()
-    #ویژگی سری 1
+    # Feature No.1
     cFeat.determine_seqs()
-    #ویژگی سری 2
+    # Feature No.2
     cFeat.determine_secondary_structure()
-    #ویژگی سری 1
-    #تابع را باید بنویسم.
+
 
 
     df = cFeat.make_output_df()
 
     if len(df) > 0:
-      # برای کریسپر طول دنباله را 30 در نظر می گیرم
+        # I consider the sequence length to be 30 for CRISPR.
         list_Guide30 = [WT74[:30] for WT74 in df['WT74_On']]
-        # هر دو اسکور اینجا حساب می شود
+        # Both scores are calculated here
         df['DeepSpCas9_score'] = spcas9_score(list_Guide30)
-        #همه ویژگی هایی را که استخراج کردم را به مدل می دهم
+        # I provide all the features I have extracted to the model
         df['%s_score' % pe_system]  = calculate_deepprime_score(df, pe_system, cell_type)
 
     else:
@@ -1053,7 +1042,7 @@ def pe_score(Ref_seq: str,
 
 
 
-# برای حالتی که داده ها را از clinVar می گیریم
+# For the case when we receive data from clinVar
 def pecv_score(cv_record,
                sID:str       = 'Sample',
                pe_system:str = 'PE2max',
@@ -1118,8 +1107,7 @@ def pecv_score(cv_record,
 
 
 
-#کد های کلاس زیر برای کنترل ورودی ها از سایت نوشته شده است.
-
+# The class codes below are written to control inputs from the site
 
 class DeepPrime:
     '''

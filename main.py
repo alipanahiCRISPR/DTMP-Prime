@@ -16,7 +16,7 @@ def print_group(myDict,myList,group_title):
 		print ("%s: %s"%(l,myDict[l]))
 
 
-#تعریف پارامترهای پیش فرض
+# Define default parameters
 def get_parameters(config):
 	p_dir = os.path.dirname(os.path.realpath(__file__)) + "/"
 	# return dict
@@ -24,14 +24,13 @@ def get_parameters(config):
 	# default parameters
 	pre_defined_list = {}
 	#------------ Prime Editing related-----------
-	#این ورودی را باید برای برنامه فراهم کنم
 	pre_defined_list["genome_fasta"] = "/home/yli11/Data/Human/hg19/fasta/hg19.fa"
 	pre_defined_list["n_jobs"] = -1
 	pre_defined_list["scaffold"] = "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC"
 	pre_defined_list["debug"] = 0
 	pre_defined_list["extend_length"] = 1000 # extracting +- 1000bp center at target pos from the genome, in 99.9% cases, you don't need to change this. If change to less than 500, will trigger fasta input mode, may cause error.
-	#   مدل های از پیش آموزش دیده را اینجا معرفی می کنم.
-	# می تونی DEEPPRIME بزاری
+	# introduction of pretrained models
+	# You can use DEEPPRIME.
 	pre_defined_list["PE2_model"] = p_dir+"../model/PE2_model_final.py"
 	pre_defined_list["PE3_model"] = p_dir+"../model/PE3_model_final.py"
 
@@ -86,7 +85,7 @@ import os
 #3. visualization of the top1s [TODO]
 #4. a summary file of each variant
 
-# گرفتن ورودی ها به شکل فایل
+# Receiving inputs as files
 def my_args():
 	mainParser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,description="pegRNA design")
 	username = getpass.getuser()
@@ -101,7 +100,7 @@ def my_args():
 	return args
 
 
-# دو گامی که در سکشن بالا تعریف کرده ام را اینجا فراخوانی می کنم.
+# Calling the two steps that I have defined in the above section
 def run_steps(t,**kwargs):
 	t.init(**kwargs)
 	t.search(**kwargs)
@@ -114,8 +113,8 @@ def run_steps(t,**kwargs):
 
 def main():
 
-	#پارامترها را به صورت فایل میگیرم
-  #برای هر تارگت کلاس بالا را فراخوانی می کنم
+	# I receive the parameters as a file.
+	# I call the above class for each target.
 	args = my_args()
 	# ------------------------- get parameters ----------------------------------------------
 
@@ -157,9 +156,8 @@ def main():
 		df_list = Parallel(n_jobs=parameters['n_jobs'],verbose=10)(delayed(run_steps)(t,**parameters) for t in my_targets)
 
 
-#--------------------------------------------ضروری نیست می توانی این ها را حذف کنی-------------------------------------------------------------------------
 	# save output
-	#یا این کد ها و یا کدهای نوشته شده قبلی، فقط چاپ سطری در بالا
+	# Either with these codes or the previously written codes, just print the line above
 	import subprocess
 	subprocess.call("mkdir -p %s"%(args.output),shell=True)
 	summary = pd.DataFrame([x[3:8] for x in df_list]).astype(int)

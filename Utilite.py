@@ -1,8 +1,8 @@
-# Utilite
-!pip install RNA
-!pip install Bio
-!pip install mechanize
-!pip install scikit-bio
+# # install these packages!
+# !pip install RNA
+# !pip install Bio
+# !pip install mechanize
+# !pip install scikit-bio
 import warnings
 warnings.filterwarnings("ignore")
 import os
@@ -32,7 +32,7 @@ def write_file(file_name,message):
 	out.write(message)
 	out.close()
 
-# برای کنترل نتایج چاپ شده - می تواند جایگزین تابع بالا شود.
+# For controlling the printed results - can replace the above function
 def print_parameters(myDict):
 	myGroup = {}
 	myGroup['Prime Editing'] = ['genome_fasta','scaffold','n_jobs','debug','PE2_model','PE3_model','extend_length']
@@ -50,7 +50,7 @@ def print_group(myDict,myList,group_title):
 		print ("%s: %s"%(l,myDict[l]))
 
 
-#تعریف پارامترهای پیش فرض
+# Defining default parameters
 def get_parameters(config):
 	p_dir = os.path.dirname(os.path.realpath(__file__)) + "/"
 	# return dict
@@ -58,14 +58,15 @@ def get_parameters(config):
 	# default parameters
 	pre_defined_list = {}
 	#------------ Prime Editing related-----------
-	#این ورودی را باید برای برنامه فراهم کنم
+	# I need to provide this input for the program
 	pre_defined_list["genome_fasta"] = "/home/yli11/Data/Human/hg19/fasta/hg19.fa"
 	pre_defined_list["n_jobs"] = -1
 	pre_defined_list["scaffold"] = "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC"
 	pre_defined_list["debug"] = 0
 	pre_defined_list["extend_length"] = 1000 # extracting +- 1000bp center at target pos from the genome, in 99.9% cases, you don't need to change this. If change to less than 500, will trigger fasta input mode, may cause error.
-	#   مدل های از پیش آموزش دیده را اینجا معرفی می کنم.
-	# می تونی DEEPPRIME بزاری
+	# I introduce pretrained models here.
+	# You can use DEEPPRIME
+
 	pre_defined_list["PE2_model"] = p_dir+"../model/PE2_model_final.py"
 	pre_defined_list["PE3_model"] = p_dir+"../model/PE3_model_final.py"
 
@@ -118,7 +119,7 @@ def write_fasta(file_name,myDict):
 	out.close()
 
 
-#طراحی  sgRNA , در ادامه PegRNA
+# Designing sgRNA, followed by PegRNA
 #------------------ sgRNA finder ---------------------------
 from Bio import SeqUtils
 def run_pam_finder(target_fa,seq,PAM,abs_start_pos,chr):
@@ -206,7 +207,7 @@ def fasta2vcf(f):
 
 
 	"""
-	# آنچه یافتم را میخواهم اینجا بریزم
+	# I want to put what I found here
 	my_dict = {}
 	for r in SeqIO.parse(f, "fasta"):
 		my_dict[r.id] = str(r.seq).upper()
@@ -456,7 +457,7 @@ def GC_content(seq):
 
 
 ulength = 31
-# ViennaRNAاز کتابخانه
+# from ViennaRNA
 md = RNA.md()
 md.max_bp_span = 70
 md.window_size = 70
@@ -600,7 +601,7 @@ def target_to_RTT5_feature(pegRNA,nick_gRNA,target_loc,RTS_length,alt_length):
 
 
 #------------------ DeepSpCas9 score  ---------------------------
-#قبلا در بالا مدل را دانملود و استفاده میکنم
+# I have already downloaded and used the model above
 
 def list_to_fasta(l):
 	out = []
