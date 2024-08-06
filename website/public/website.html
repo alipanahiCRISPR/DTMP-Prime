@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DTMP-Prime</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #b0ddf0;
+        color: #333;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #333;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      table {
+        margin: 20px auto;
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      #footer {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #333;
+        color: white;
+      }
+      #header {
+        margin-top: 0%;
+        margin-bottom: 20px;
+        color: white;
+      }
+      .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>DTMP-Prime</h1>
+      <h3>
+        DTMP-Prime: A Deep Transformer-based Model for Predicting Prime Editing
+        Efficiency and PegRNA Activity
+      </h3>
+    </div>
+    <div class="container">
+      <div>
+        <img
+          style="width: 70%; border-radius: 10px"
+          src="graphical abstract 2-2.jpg"
+          alt="graphical abstract"
+        />
+      </div>
+      <form id="dataForm">
+        <div class="form-group">
+          <label for="RefSeq">Ref Seq:</label>
+          <input type="text" id="RefSeq" name="RefSeq" required />
+        </div>
+        <div class="form-group">
+          <label for="EditedSeq">Edited Seq:</label>
+          <input type="text" id="EditedSeq" name="EditedSeq" required />
+        </div>
+
+        <div id="encodedMatrixContainer" style="display: none">
+          <h2>Encoded Matrix</h2>
+          <div class="table-responsive">
+            <table id="encodedMatrixTable">
+              <!-- Encoded matrix data will be inserted here -->
+            </table>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="PEsystem">PE system:</label>
+          <select id="PEsystem" name="PEsystem">
+            <option value="2">PE 2</option>
+            <option value="3">PE 3</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="EditType">Edit Type:</label>
+          <select id="EditType" name="EditType">
+            <option value="Insertion">Insertion</option>
+            <option value="Deletion">Deletion</option>
+            <option value="Substitutions">Substitutions</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="EditLength">Edit Length:</label>
+          <select id="EditLength" name="EditLength">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="MaximumRTTLength">Maximum RTT Length:</label>
+          <input
+            type="text"
+            id="MaximumRTTLength"
+            name="MaximumRTTLength"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="MaximumPBSLength">Maximum PBS Length:</label>
+          <input
+            type="text"
+            id="MaximumPBSLength"
+            name="MaximumPBSLength"
+            required
+          />
+        </div>
+        <button type="submit">Submit</button>
+
+        <h2 class="result-header" style="display: none">Result</h2>
+        <div class="table-responsive">
+          <table class="result-table" style="display: none">
+            <thead>
+              <tr>
+                <th>PBSlength</th>
+                <th>RTlength</th>
+                <th>spacer</th>
+                <th>delta tm (tm3 - tm2)</th>
+                <th>tm3 (pegRNA)</th>
+                <th>tm2 (RT)</th>
+                <th>tm1 (PBS)</th>
+                <th>Extension_seq</th>
+                <th>PBS_GC_count</th>
+                <th>original_GC_count</th>
+                <th>edited_GC_count</th>
+                <th>MFE_extension</th>
+                <th>MFE_extension_scaffold</th>
+                <th>deep_SP_cas9</th>
+                <th>PE_efficiency</th>
+              </tr>
+            </thead>
+            <tbody id="dataTable">
+              <!-- Data will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+    <script type="text/javascript" src="javascript.js"></script>
+    <div id="footer">
+      <p>© Laboratory of Dr.Safari (University of Zanjan)</p>
+    </div>
+  </body>
+</html>
