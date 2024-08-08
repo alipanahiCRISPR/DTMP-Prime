@@ -91,8 +91,12 @@ Visualization of DTMP-Prime consists of three steps:
 
 ---
 
-## Run our code as desktop app 📈
+## Website
+Our website is under development. It will be available on web soon. Now, you can use our website as local app. Just clone DTMP-Prime and follow:
 
+
+
+and   ()
 
 
 ---
