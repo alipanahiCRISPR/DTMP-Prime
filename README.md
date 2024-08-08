@@ -94,11 +94,12 @@ Visualization of DTMP-Prime consists of three steps:
 ## Website
 Our website is under development. It will be available on web soon. Now, you can use our website as local app. Just clone DTMP-Prime and follow:
 
+    npm install or yarn install
 
+    npm start or yarn start or node sever.js
 
-and   ()
-
-
+    open your browser and go to http://localhost:3000
+    
 ---
 
 We hope you find DTMP-Prime useful for your research. If you have any questions or encounter any issues, please don't hesitate to contact us.
