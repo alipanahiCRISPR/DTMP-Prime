@@ -62,10 +62,11 @@
       }
       th,
       td {
-        padding: 10px;
+        padding: 2px;
         border: 1px solid #ccc;
         text-align: left;
       }
+
       th {
         background-color: #f2f2f2;
       }
@@ -84,6 +85,20 @@
         width: 100%;
         overflow-x: auto;
       }
+
+      .encoded-table td {
+        padding: 0;
+        text-align: center;
+      }
+      .bg-1 {
+        background-color: white;
+      }
+      .bg-0 {
+        background-color: #d3d3d3;
+      }
+      .bg-minus-1 {
+        background-color: #a9a9a9;
+      }
     </style>
   </head>
   <body>
@@ -93,11 +108,17 @@
         DTMP-Prime: A Deep Transformer-based Model for Predicting Prime Editing
         Efficiency and PegRNA Activity
       </h3>
+      <p style="text-align: center; color: #333">
+        <i>
+          R.Alipanahi (University of Zanjan) L.Safari(University of Zanjan)
+          A.Khanteymoori(University of Freiburg)
+        </i>
+      </p>
     </div>
     <div class="container">
       <div>
         <img
-          style="width: 70%; border-radius: 10px"
+          style="width: 50%; border-radius: 10px"
           src="graphical abstract 2-2.jpg"
           alt="graphical abstract"
         />
@@ -112,15 +133,6 @@
           <input type="text" id="EditedSeq" name="EditedSeq" required />
         </div>
 
-        <div id="encodedMatrixContainer" style="display: none">
-          <h2>Encoded Matrix</h2>
-          <div class="table-responsive">
-            <table id="encodedMatrixTable">
-              <!-- Encoded matrix data will be inserted here -->
-            </table>
-          </div>
-        </div>
-
         <div class="form-group">
           <label for="PEsystem">PE system:</label>
           <select id="PEsystem" name="PEsystem">
@@ -133,7 +145,8 @@
           <select id="EditType" name="EditType">
             <option value="Insertion">Insertion</option>
             <option value="Deletion">Deletion</option>
-            <option value="Substitutions">Substitutions</option>
+            <option value="1bpReplacement">1bpReplacement</option>
+            <option value="MultibpReplacement">MultibpReplacement</option>
           </select>
         </div>
         <div class="form-group">
@@ -164,26 +177,36 @@
         </div>
         <button type="submit">Submit</button>
 
+        <br />
+        <hr />
+        <br />
+
+        <div id="encodedMatrixContainer" style="display: none">
+          <h2>Encoded Matrix</h2>
+          <div class="table-responsive">
+            <table id="encodedMatrixTable">
+              <!-- Encoded matrix data will be inserted here -->
+            </table>
+          </div>
+        </div>
+
         <h2 class="result-header" style="display: none">Result</h2>
         <div class="table-responsive">
           <table class="result-table" style="display: none">
             <thead>
               <tr>
                 <th>PBSlength</th>
-                <th>RTlength</th>
                 <th>spacer</th>
-                <th>delta tm (tm3 - tm2)</th>
-                <th>tm3 (pegRNA)</th>
-                <th>tm2 (RT)</th>
-                <th>tm1 (PBS)</th>
-                <th>Extension_seq</th>
-                <th>PBS_GC_count</th>
-                <th>original_GC_count</th>
-                <th>edited_GC_count</th>
-                <th>MFE_extension</th>
-                <th>MFE_extension_scaffold</th>
-                <th>deep_SP_cas9</th>
-                <th>PE_efficiency</th>
+                <th>PBS</th>
+                <th>RTT</th>
+                <th>pegRNA</th>
+                <th>RTmt</th>
+                <th>RTToverhangmt</th>
+                <th>PBSmt</th>
+                <th>Spacer_GC_content</th>
+                <th>Extension_GC_content</th>
+                <th>deepcas9</th>
+                <th>PRIDICT_score</th>
               </tr>
             </thead>
             <tbody id="dataTable">
