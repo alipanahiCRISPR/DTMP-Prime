@@ -1,7 +1,7 @@
 let csvData = [];
 
 async function fillCSV() {
-  await fetchAndParseCSV("output.csv");
+  await fetchAndParseCSV("output2.csv");
 }
 
 async function fetchAndParseCSV(filePath) {
@@ -10,7 +10,6 @@ async function fetchAndParseCSV(filePath) {
     const text = await response.text();
     const rows = text.trim().split("\n");
     csvData = rows.map((row) => row.split(","));
-    // console.log(csvData); //TODO: This is your array of arrays
   } catch (error) {
     console.error("Error fetching or parsing CSV file:", error);
   }
@@ -50,6 +49,13 @@ document
         row.forEach((cell) => {
           const tableCell = document.createElement("td");
           tableCell.innerText = cell;
+          if (cell === 1) {
+            tableCell.classList.add("bg-1");
+          } else if (cell === 0) {
+            tableCell.classList.add("bg-0");
+          } else if (cell === -1) {
+            tableCell.classList.add("bg-minus-1");
+          }
           tableRow.appendChild(tableCell);
         });
         table.appendChild(tableRow);
@@ -79,9 +85,7 @@ document
             const tableRow = table.insertRow();
             const newRow = row.slice(3, row.length);
 
-            // console.log(tableRow);
             newRow.forEach((cell, cellIndex) => {
-              console.log(newRow);
               const tableCell = document.createElement("td");
               tableCell.innerText = cell;
               tableRow.appendChild(tableCell);
