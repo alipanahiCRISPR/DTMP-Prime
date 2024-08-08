@@ -6,7 +6,7 @@ DTMP-Prime leverages the power of BERT, a Bi-directional Transformer-based model
 
 ### Architecture 🧱
 
-<img src="/Figures/graphical%20abstract%202-2.jpg" alt="drawing" style="width:800px;"/>
+<img src="/Figures/graphical%20abstract%202-2.jpg" alt="drawing" style="width:400px;"/>
 
 ### Steps 🪜
 
