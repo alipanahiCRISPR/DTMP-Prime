@@ -91,4 +91,10 @@ Visualization of DTMP-Prime consists of three steps:
 
 ---
 
+## Run our code as desktop app 📈
+
+
+
+---
+
 We hope you find DTMP-Prime useful for your research. If you have any questions or encounter any issues, please don't hesitate to contact us.
